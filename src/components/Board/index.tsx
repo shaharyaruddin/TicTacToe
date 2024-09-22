@@ -2,22 +2,27 @@ import { useState } from "react";
 
 const TicTacToe = () => {
   const [board, setBoard] = useState<any>(Array(9).fill(""));
+  const [currentPlayer,setCurrentPlayer]= useState('X')
 
   const handleBoard = (index: number) => {
     const newBoard: any = [...board];
+  
+  if(newBoard[index]==''){
+    newBoard[index] = currentPlayer;
+setBoard(newBoard)
+  }
+    
+   setCurrentPlayer( currentPlayer == 'X' ? 'O' : 'X' )
 
-    if (newBoard == "") {
-      newBoard[index] = "X";
-      setBoard(newBoard);
-    } 
-    else if (newBoard == "X") {
-      newBoard[index] = "0";
-      setBoard(newBoard);
-    } else {
-      newBoard[index] = "X";
-      setBoard(newBoard);
-    }
-  };
+
+   if(newBoard[0]=='X' && newBoard[1]=='X' && newBoard[2]== "X"  ){
+alert('You won the match')
+   }
+   else if(newBoard[0]=='O' && newBoard[1]=='O' && newBoard[2]== "O"  ){
+    alert('You won the match')
+       }
+ 
+  }
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
