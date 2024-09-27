@@ -1,8 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const getLocalItems = () => {
+  const saveItems = localStorage.getItem("items");
+  if (saveItems) {
+    return JSON.parse(saveItems);
+  } else {
+    return Array(9).fill("");
+  }
+};
+
+
 
 const TicTacToe = () => {
-  const [board, setBoard] = useState<string[]>(Array(9).fill(""));
+  const [board, setBoard] = useState(getLocalItems());
   const [currentPlayer, setCurrentPlayer] = useState("X");
+
 
   const handleBoard = (index: number) => {
     const newBoard = [...board];
@@ -15,11 +27,14 @@ const TicTacToe = () => {
         setTimeout(() => {
           alert(`${currentPlayer} won the match`);
           resetBoard();
-        }, 300); // Added delay for animation visibility
+        }, 300);
         return;
       }
+      
       setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
     }
+   
+    
   };
 
   const checkWinners = (board: string[]) => {
@@ -39,9 +54,14 @@ const TicTacToe = () => {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
         return true;
       }
+     
     }
-    return false;
+    return ;
   };
+
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(board));
+  }, [board]);
 
   const resetBoard = () => {
     setBoard(Array(9).fill(""));
@@ -54,6 +74,10 @@ const TicTacToe = () => {
     return borders + "border-yellow-500";
   };
 
+const handleReset=()=>{
+  resetBoard()
+}
+
   return (
     <>
       <div className="flex justify-center items-center w-full h-screen bg-[#060F36]">
@@ -64,7 +88,11 @@ const TicTacToe = () => {
                 key={index}
                 className={`hover:cursor-pointer flex justify-center items-center text-5xl font-bold transition-all duration-300 ease-in-out transform hover:scale-110 ${getCellBorder(
                   index
-                )} ${item === "X" ? "text-pink-500 animate-pulse" : "text-blue-500 animate-bounce"}`}
+                )} ${
+                  item === "X"
+                    ? "text-pink-500 animate-pulse"
+                    : "text-blue-500 animate-bounce"
+                }`}
                 onClick={() => handleBoard(index)}
               >
                 <span
@@ -77,8 +105,12 @@ const TicTacToe = () => {
               </div>
             );
           })}
+
         </div>
+      <div className="absolute bottom-10 cursor-pointer border rounded-md p-2 text-xl text-white font-bold italic" onClick={handleReset}>Reset</div>
+
       </div>
+
     </>
   );
 };
